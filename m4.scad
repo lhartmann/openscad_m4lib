@@ -42,7 +42,7 @@ function m4rz(a) = [
 //   m4scale([sx, sy, sz])   scale each axis independently
 //   m4scale([-1,  0,  0])   mirror over X axis / YZ plane
 function m4scale(s) = 
-	len(s) == 1 ? [ 
+	len(s) == undef ? [ 
 		[s,    0,    0,    0],
 		[0,    s,    0,    0],
 		[0,    0,    s,    0],
@@ -53,6 +53,20 @@ function m4scale(s) =
 		[0,    0,    s[2], 0],
 		[0,    0,    0,    1]
 	];
+
+// Extract only the rotation/scaling/mirroring submatrix
+function m4rotm(m) = [
+	[mx[0][0], mx[0][1], mx[0][2], 0],
+	[mx[1][0], mx[1][1], mx[1][2], 0],
+	[mx[2][0], mx[2][1], mx[2][2], 0],
+	[       0,        0,        0, 1],
+];
+
+// Extract just the translation vector
+function m4trv(m) = [m[0][3], m[1][3], m[2][3]];
+
+// Aply transformation matrix to a single point
+function m4_transform_point(m,p) = m4trv(m*m4tr(p));
 
 // Matrix inversion, this code is a mess
 
