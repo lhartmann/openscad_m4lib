@@ -100,7 +100,7 @@ function m4inv_solve(i,mx) =
 	i+1<4 && mx[i][i+1] != 0 ? m4inv_solve2(i, m4inv_rowswap(i,i+1,mx)) :
 	i+2<4 && mx[i][i+2] != 0 ? m4inv_solve2(i, m4inv_rowswap(i,i+2,mx)) :
 	i+3<4 && mx[i][i+3] != 0 ? m4inv_solve2(i, m4inv_rowswap(i,i+3,mx)) :
-	[ 0,0,0,0 ]; // Singular matrix
+	m4inv_mx(m4identity()); // Singular matrix, reset to identity
 
 // Get result from row-reduced echelon format
 function m4inv_m(mx) = [
