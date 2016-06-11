@@ -75,7 +75,7 @@ function m4inv_mx(m) = [
 	[m[0][0], m[0][1], m[0][2], m[0][3], 1, 0, 0, 0],
 	[m[1][0], m[1][1], m[1][2], m[1][3], 0, 1, 0, 0],
 	[m[2][0], m[2][1], m[2][2], m[2][3], 0, 0, 1, 0],
-	[m[3][0], m[3][1], m[3][2], m[3][3], 0, 0, 0, 1],
+	[m[3][0], m[3][1], m[3][2], m[3][3], 0, 0, 0, 1]
 ];
 
 // Swap rows to move zeros away from diagonal
@@ -86,28 +86,29 @@ function m4inv_rowswap(i,j,mx) = [
 	i==3 ? mx[j] : j==3 ? mx[i] : mx[3]
 ];
 
-// Solve one step, direct solution, assum nonzero at diagonal
+// Solve one step, direct solution, assume nonzero at diagonal
 function m4inv_solve2(i,mx) = [
 	(i==0) ? mx[i]/mx[i][i] : mx[0]-mx[i]*mx[0][i]/mx[i][i],
 	(i==1) ? mx[i]/mx[i][i] : mx[1]-mx[i]*mx[1][i]/mx[i][i],
 	(i==2) ? mx[i]/mx[i][i] : mx[2]-mx[i]*mx[2][i]/mx[i][i],
-	(i==3) ? mx[i]/mx[i][i] : mx[3]-mx[i]*mx[3][i]/mx[i][i],
+	(i==3) ? mx[i]/mx[i][i] : mx[3]-mx[i]*mx[3][i]/mx[i][i]
 ];
 
-// Solve one step, swap rows on diagonal zeroe detected
+// Solve one step, ensure nonzero at diagonal element.
+function m4inv_zero(x) = abs(x) < 1e-5;
 function m4inv_solve(i,mx) = 
-	mx[i][i] != 0 ? m4inv_solve2(i,mx) :
-	i+1<4 && mx[i][i+1] != 0 ? m4inv_solve2(i, m4inv_rowswap(i,i+1,mx)) :
-	i+2<4 && mx[i][i+2] != 0 ? m4inv_solve2(i, m4inv_rowswap(i,i+2,mx)) :
-	i+3<4 && mx[i][i+3] != 0 ? m4inv_solve2(i, m4inv_rowswap(i,i+3,mx)) :
-	m4inv_mx(m4identity()); // Singular matrix, reset to identity
+	         !m4inv_zero(mx[i][i  ]) ? m4inv_solve2(i,                     mx ) :
+	i+1<4 && !m4inv_zero(mx[i][i+1]) ? m4inv_solve2(i, m4inv_rowswap(i,i+1,mx)) :
+	i+2<4 && !m4inv_zero(mx[i][i+2]) ? m4inv_solve2(i, m4inv_rowswap(i,i+2,mx)) :
+	i+3<4 && !m4inv_zero(mx[i][i+3]) ? m4inv_solve2(i, m4inv_rowswap(i,i+3,mx)) :
+	m4identity(); // Singular matrix, reset to identity
 
 // Get result from row-reduced echelon format
 function m4inv_m(mx) = [
 	[mx[0][4], mx[0][5], mx[0][6], mx[0][7]],
 	[mx[1][4], mx[1][5], mx[1][6], mx[1][7]],
 	[mx[2][4], mx[2][5], mx[2][6], mx[2][7]],
-	[mx[3][4], mx[3][5], mx[3][6], mx[3][7]],
+	[mx[3][4], mx[3][5], mx[3][6], mx[3][7]]
 ];
 
 // Full matrix inversion using functions on top
