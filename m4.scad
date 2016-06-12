@@ -97,10 +97,10 @@ function m4inv_solve2(i,mx) = [
 // Solve one step, ensure nonzero at diagonal element.
 function m4inv_zero(x) = abs(x) < 1e-5;
 function m4inv_solve(i,mx) = 
-	         !m4inv_zero(mx[i][i  ]) ? m4inv_solve2(i,                     mx ) :
-	i+1<4 && !m4inv_zero(mx[i][i+1]) ? m4inv_solve2(i, m4inv_rowswap(i,i+1,mx)) :
-	i+2<4 && !m4inv_zero(mx[i][i+2]) ? m4inv_solve2(i, m4inv_rowswap(i,i+2,mx)) :
-	i+3<4 && !m4inv_zero(mx[i][i+3]) ? m4inv_solve2(i, m4inv_rowswap(i,i+3,mx)) :
+	         !m4inv_zero(mx[i  ][i]) ? m4inv_solve2(i,                     mx ) :
+	i+1<4 && !m4inv_zero(mx[i+1][i]) ? m4inv_solve2(i, m4inv_rowswap(i,i+1,mx)) :
+	i+2<4 && !m4inv_zero(mx[i+2][i]) ? m4inv_solve2(i, m4inv_rowswap(i,i+2,mx)) :
+	i+3<4 && !m4inv_zero(mx[i+3][i]) ? m4inv_solve2(i, m4inv_rowswap(i,i+3,mx)) :
 	m4identity(); // Singular matrix, reset to identity
 
 // Get result from row-reduced echelon format
